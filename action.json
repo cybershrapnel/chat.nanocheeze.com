@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Custom GPT to Audio API
+  description: "This API sends GPT-generated text to be converted into audio and video with an image upload option to use your GPT created artwork."
+  version: 1.0.0
+servers:
+  - url: https://nanocheeze.com
+    description: "Main server for the Audio and Video Generation API"
+
+paths:
+  /create_audio2/:
+    post:
+      operationId: GENERATE
+      summary: Sends text to be converted into audio and video.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: "The GPT-generated text to be converted into audio and video."
+                  default: "this is a test"
+
+      responses:
+        '200':
+          description: "Successfully processed the text. Returns the full direct URL to the generated audio and video file."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreationResponse'
+        '400':
+          description: "Bad request, possibly due to invalid input."
+        '500':
+          description: "Internal server error."
+
+components:
+  schemas:
+    CreationResponse:
+      type: object
+      required:
+        - url
+        - url2
+        - content
+        - message
+      properties:
+        url:
+          type: string
+          description: "Full URL to the generated audio file and it should clearly say the full path of the url. This should be a direct link that users can click or access directly in a browser and will take a few moments to be available."
+        url2:
+          type: string
+          description: "Full URL to the generated video file and it should clearly say the full path of the url. This should be a direct link that users can click or access directly in a browser and will take a few moments to be available."
+        message:
+          type: string
+          description: "Status or result message from the server."
+        filename:
+          type: string
+          description: "The name of the file where the text is stored."
+        content:
+          type: string
+          description: "The text that was sent to the server."
